@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPTS Modernization — 24-Month Implementation Timeline</title>
+  <style>
+    :root {
+      --bg: #f0f4f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 8px 28px rgba(15, 23, 42, 0.10);
+
+      --phase0:       #0f766e;
+      --phase0-soft:  #ccfbf1;
+      --phase1:       #2563eb;
+      --phase1-soft:  #dbeafe;
+      --phase2:       #7c3aed;
+      --phase2-soft:  #ede9fe;
+      --phase3:       #b45309;
+      --phase3-soft:  #fef3c7;
+      --milestone:    #be185d;
+      --milestone-soft:#fce7f3;
+
+      --cell-w:  38px;
+      --label-w: 240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Page Shell ── */
+    .page { max-width: 1400px; margin: 0 auto; padding: 20px 16px; }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1e40af 100%);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+      color: white;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .header-left p {
+      font-size: 13px;
+      opacity: 0.75;
+      line-height: 1.5;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 10px 18px;
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 3px;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    /* ── Sidebar Panel ── */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #374151;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    /* Phase summary cards */
+    .phase-card {
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border-left: 4px solid transparent;
+    }
+
+    .phase-card.p0 { background: var(--phase0-soft); border-color: var(--phase0); }
+    .phase-card.p1 { background: var(--phase1-soft); border-color: var(--phase1); }
+    .phase-card.p2 { background: var(--phase2-soft); border-color: var(--phase2); }
+    .phase-card.p3 { background: var(--phase3-soft); border-color: var(--phase3); }
+
+    .phase-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .phase-card-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .phase-card-months {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      background: white;
+      border-radius: 99px;
+      padding: 2px 8px;
+    }
+
+    .phase-card p {
+      font-size: 11px;
+      color: #374151;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    .milestone-list {
+      margin-top: 16px;
+    }
+
+    .milestone-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 11px;
+    }
+
+    .milestone-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--milestone);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .milestone-item-text { line-height: 1.4; }
+    .milestone-item-text strong { display: block; color: #111827; }
+    .milestone-item-text span { color: var(--muted); }
+
+    /* Critical Gaps section */
+    .gap-list { margin-top: 16px; }
+
+    .gap-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 11px;
+    }
+
+    .gap-badge {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .gap-badge.red { background: #dc2626; }
+    .gap-badge.amber { background: #d97706; }
+
+    .gap-item-text { line-height: 1.4; color: #374151; }
+
+    /* ── Gantt Board ── */
+    .board {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .board-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 8px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #fafbfc;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+    }
+
+    .fs-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      background: white;
+      color: #374151;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    .fs-btn:hover { background: #f3f4f6; }
+    .fs-btn svg { width: 14px; height: 14px; }
+
+    /* ── Gantt Scroll Area ── */
+    .gantt-wrap {
+      overflow: auto;
+      max-height: calc(100vh - 140px);
+    }
+
+    .gantt {
+      width: calc(var(--label-w) + (var(--month-count) * var(--cell-w)));
+      min-width: 100%;
+    }
+
+    /* Header rows — Phase band + Month numbers */
+    .phase-band-row {
+      display: flex;
+      align-items: stretch;
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      background: #f9fafb;
+      border-bottom: 1px solid #dde1e7;
+    }
+
+    .phase-band-label {
+      width: var(--label-w);
+      min-width: var(--label-w);
+      flex-shrink: 0;
+      position: sticky;
+      left: 0;
+      z-index: 7;
+      background: #f9fafb;
+      border-right: 1px solid var(--border);
+    }
+
+    .phase-band-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.3px;
+      border-right: 2px solid white;
+      height: 24px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: stretch;
+      position: sticky;
+      top: 24px;
+      z-index: 5;
+      background: #f9fafb;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .left-head {
+      width: var(--label-w);
+      min-width: var(--label-w);
+      flex-shrink: 0;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border-right: 1px solid var(--border);
+      position: sticky;
+      left: 0;
+      z-index: 6;
+      background: #f9fafb;
+      color: #374151;
+    }
+
+    .month-head {
+      width: var(--cell-w);
+      min-width: var(--cell-w);
+      flex-shrink: 0;
+      padding: 6px 2px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #374151;
+      border-right: 1px solid #eef2f7;
+    }
+
+    /* Task rows */
+    .task-row {
+      min-height: 52px;
+      border-bottom: 1px solid #f0f2f5;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .task-row:hover { background: #fafbff; }
+
+    /* Group header row */
+    .group-row {
+      display: flex;
+      align-items: stretch;
+      background: #f4f6f9;
+      border-bottom: 1px solid #dde3ec;
+      border-top: 2px solid #dde3ec;
+      min-height: 30px;
+    }
+
+    .group-label {
+      width: var(--label-w);
+      min-width: var(--label-w);
+      flex-shrink: 0;
+      padding: 6px 12px;
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background: #f4f6f9;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .group-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 99px;
+      color: white;
+    }
+
+    .group-row-cells {
+      display: flex;
+      flex: 1;
+    }
+
+    .group-cell {
+      width: var(--cell-w);
+      min-width: var(--cell-w);
+      flex-shrink: 0;
+      border-right: 1px solid #eef2f7;
+    }
+
+    .task-info {
+      width: var(--label-w);
+      min-width: var(--label-w);
+      flex-shrink: 0;
+      padding: 8px 12px 8px 20px;
+      border-right: 1px solid var(--border);
+      position: sticky;
+      left: 0;
+      z-index: 3;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .task-row:hover .task-info { background: #fafbff; }
+
+    .task-title {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 2px;
+      color: #111827;
+    }
+
+    .task-meta {
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .month-cell {
+      width: var(--cell-w);
+      min-width: var(--cell-w);
+      flex-shrink: 0;
+      border-right: 1px solid #f3f4f6;
+      background: white;
+    }
+
+    /* Alternating quarter shading */
+    .month-cell.q-alt { background: #fafbfc; }
+
+    .task-row:hover .month-cell,
+    .task-row:hover .month-cell.q-alt { background: #f5f7ff; }
+
+    /* Milestone marker column */
+    .month-cell.milestone-col {
+      border-right: 1px dashed #f9a8d4;
+      background: rgba(252, 231, 243, 0.25);
+    }
+
+    /* Task bar */
+    .task-bar {
+      position: absolute;
+      height: 18px;
+      border-radius: 999px;
+      top: 17px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: white;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.18);
+    }
+
+    .bar-p0 { background: var(--phase0); }
+    .bar-p1 { background: var(--phase1); }
+    .bar-p2 { background: var(--phase2); }
+    .bar-p3 { background: var(--phase3); }
+    .bar-milestone {
+      background: var(--milestone);
+      width: 18px !important;
+      height: 18px;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    /* Milestone diamond */
+    .milestone-diamond {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--milestone);
+      transform: rotate(45deg);
+      border-radius: 2px;
+      top: 19px;
+      box-shadow: 0 2px 6px rgba(190,24,93,0.4);
+    }
+
+    /* ── Fullscreen ── */
+    .board:fullscreen,
+    .board:-webkit-full-screen,
+    .board:-moz-full-screen {
+      background: var(--card);
+      border-radius: 0;
+      border: none;
+    }
+
+    .board:fullscreen .gantt-wrap,
+    .board:-webkit-full-screen .gantt-wrap,
+    .board:-moz-full-screen .gantt-wrap {
+      flex: 1;
+      max-height: none;
+    }
+
+    .board:fullscreen .icon-expand,
+    .board:-webkit-full-screen .icon-expand,
+    .board:-moz-full-screen .icon-expand { display: none; }
+
+    .icon-compress { display: none; }
+    .board:fullscreen .icon-compress,
+    .board:-webkit-full-screen .icon-compress,
+    .board:-moz-full-screen .icon-compress { display: inline; }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel { max-height: none; }
+      .gantt-wrap { max-height: 75vh; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>MPTS Modernization — 24-Month Implementation Timeline</h1>
+      <p>Megabyte Property Tax System · Hybrid Strangler Fig Migration · June 2026 – May 2028</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-val">525</div>
+        <div class="stat-lbl">Screens</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">1,328</div>
+        <div class="stat-lbl">DB Tables</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">7,200+</div>
+        <div class="stat-lbl">Stored Procs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="panel">
+      <div class="panel-title">Phase Summary</div>
+
+      <div class="phase-card p0">
+        <div class="phase-card-header">
+          <span class="phase-card-name">⚙️ Phase 0 — Foundation</span>
+          <span class="phase-card-months">Months 1–4</span>
+        </div>
+        <p>Azure Landing Zone setup, CI/CD pipelines, SSO via Azure AD (PKCE), VNET &amp; NSG design, Elastic Pool provisioning, peripheral hardware audit (Cashiering scanners/printers), and environment sign-off.</p>
+      </div>
+
+      <div class="phase-card p1">
+        <div class="phase-card-header">
+          <span class="phase-card-name">🏗️ Phase 1 — Tier 1 Delivery</span>
+          <span class="phase-card-months">Months 5–12</span>
+        </div>
+        <p>Assessor module (358 tables, 38.9M rows) and Taxroll (149 tables, 14.2M rows). First .NET 8 APIs go live. React SPA scaffold with 10 reusable UI templates. Migration Factory delivery model activated. Automated scaffolding engine for DTO &amp; API controllers.</p>
+      </div>
+
+      <div class="phase-card p2">
+        <div class="phase-card-header">
+          <span class="phase-card-name">📦 Phase 2 — Tier 2 Expansion</span>
+          <span class="phase-card-months">Months 13–18</span>
+        </div>
+        <p>TOT (38 tables) and COB (26 tables) modules. Shared services: Search (Redis), Address (GIS), Reporting (Power BI / SSRS replacing Crystal Reports). UI Design Freeze. Multi-tenant row-level security hardening.</p>
+      </div>
+
+      <div class="phase-card p3">
+        <div class="phase-card-header">
+          <span class="phase-card-name">🏁 Phase 3 — Finalization</span>
+          <span class="phase-card-months">Months 19–24</span>
+        </div>
+        <p>CBT/WIS cleanup &amp; merge into Tax service (~51 non-functional screens retired). Full data migration, UAT, parallel run wind-down, legacy WinForms UI shutdown. DR/RTO/RPO go-live validation.</p>
+      </div>
+
+      <div class="panel-title" style="margin-top:16px;">Key Milestones</div>
+      <div class="milestone-list">
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>Environment Sign-Off</strong>
+            <span>End of Month 4 — Azure infra baseline approved</span>
+          </div>
+        </div>
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>First API Live</strong>
+            <span>Month 8 — Assessor read endpoints operational</span>
+          </div>
+        </div>
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>Sprint Demo #1</strong>
+            <span>Month 10 — Taxroll UI demo to stakeholders</span>
+          </div>
+        </div>
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>UI Design Freeze</strong>
+            <span>Month 18 — All React templates locked</span>
+          </div>
+        </div>
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>UAT Complete</strong>
+            <span>Month 22 — County sign-off on all modules</span>
+          </div>
+        </div>
+        <div class="milestone-item">
+          <div class="milestone-dot"></div>
+          <div class="milestone-item-text">
+            <strong>Legacy UI Shutdown</strong>
+            <span>Month 24 — WinForms decommissioned</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-title" style="margin-top:16px;">Critical Gaps to Resolve</div>
+      <div class="gap-list">
+        <div class="gap-item">
+          <div class="gap-badge red">G1</div>
+          <div class="gap-item-text"><strong>DR / RTO/RPO</strong> — No targets defined yet</div>
+        </div>
+        <div class="gap-item">
+          <div class="gap-badge red">G2</div>
+          <div class="gap-item-text"><strong>RBAC</strong> — No roles or permissions documented</div>
+        </div>
+        <div class="gap-item">
+          <div class="gap-badge amber">G3</div>
+          <div class="gap-item-text"><strong>Network Security</strong> — VNET/NSG design pending</div>
+        </div>
+        <div class="gap-item">
+          <div class="gap-badge amber">G4</div>
+          <div class="gap-item-text"><strong>Data Retention</strong> — Legal policy undefined</div>
+        </div>
+        <div class="gap-item">
+          <div class="gap-badge amber">G5</div>
+          <div class="gap-item-text"><strong>API Rate Limiting</strong> — Throttle thresholds unset</div>
+        </div>
+        <div class="gap-item">
+          <div class="gap-badge amber">G6</div>
+          <div class="gap-item-text"><strong>Monitoring Alerts</strong> — No alert thresholds defined</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: GANTT BOARD -->
+    <div class="board" id="ganttBoard">
+      <div class="board-topbar">
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--phase0)"></span>Phase 0 — Foundation</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--phase1)"></span>Phase 1 — Tier 1</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--phase2)"></span>Phase 2 — Tier 2</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--phase3)"></span>Phase 3 — Finalize</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--milestone); border-radius:50%"></span>Milestone</div>
+        </div>
+        <button class="fs-btn" id="fsBtn" title="Toggle fullscreen">
+          <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+          <svg class="icon-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+            <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+          </svg>
+          <span id="fsBtnLabel">Fullscreen</span>
+        </button>
+      </div>
+
+      <div class="gantt-wrap">
+        <div id="gantt" class="gantt"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────────────────────────────────────
+  // DATA — each task: { group, label, note, start, end, barClass, type }
+  //   start/end = 1-based month numbers (1=Month 1 … 24=Month 24)
+  //   type: 'task' | 'milestone'
+  // ─────────────────────────────────────────────────────────────────────────────
+  const TOTAL_MONTHS = 24;
+  const CELL_W  = 38;
+  const LABEL_W = 240;
+
+  const phases = [
+    { id: 'p0', label: 'Phase 0 — Foundation',      start: 1,  end: 4,  cls: 'bar-p0',  color: '#0f766e' },
+    { id: 'p1', label: 'Phase 1 — Tier 1 Delivery', start: 5,  end: 12, cls: 'bar-p1',  color: '#2563eb' },
+    { id: 'p2', label: 'Phase 2 — Tier 2 Expansion',start: 13, end: 18, cls: 'bar-p2',  color: '#7c3aed' },
+    { id: 'p3', label: 'Phase 3 — Finalization',     start: 19, end: 24, cls: 'bar-p3',  color: '#b45309' },
+  ];
+
+  const tasks = [
+    // ── Phase 0 ──────────────────────────────────────────────────────────────
+    { group:'p0', label:'Azure Landing Zone',         note:'Subscription, resource groups, networking (VNET, NSG, subnets)', start:1, end:3, barClass:'bar-p0' },
+    { group:'p0', label:'CI/CD Pipelines',            note:'Azure DevOps, Bicep/Terraform IaC, build & release automation', start:1, end:4, barClass:'bar-p0' },
+    { group:'p0', label:'SSO / Azure AD (PKCE)',      note:'App Registration, OIDC/PKCE flow, MSAL JS integration', start:2, end:4, barClass:'bar-p0' },
+    { group:'p0', label:'Database Provisioning',      note:'Elastic Pool (200-300 eDTU), Core SQL P1, Redis, Key Vault', start:2, end:4, barClass:'bar-p0' },
+    { group:'p0', label:'Peripheral Audit',           note:'Web-compatible drivers for Cashiering (TCW0300) scanners/printers', start:3, end:4, barClass:'bar-p0' },
+    { group:'p0', label:'⚑  Environment Sign-Off',   note:'Milestone: Azure infra baseline approved by county', start:4, end:4, barClass:'bar-p0', type:'milestone' },
+
+    // ── Phase 1 ──────────────────────────────────────────────────────────────
+    { group:'p1', label:'Migration Factory Setup',    note:'Scaffolding engine, 10 React UI templates, DTO generation from SQL metadata', start:5, end:7, barClass:'bar-p1' },
+    { group:'p1', label:'Assessor Module APIs',       note:'358 tables, 2,900 SPs, 38.9M rows — .NET 8 service + Elastic Pool DB', start:5, end:11, barClass:'bar-p1' },
+    { group:'p1', label:'Taxroll Module APIs',        note:'149 tables, 1,824 SPs, 14.2M rows — Tax DB on Elastic Pool', start:6, end:12, barClass:'bar-p1' },
+    { group:'p1', label:'React SPA Scaffold',         note:'Tailwind CSS, 10 reusable screen templates (Search-Grid, Master-Detail, Wizard)', start:5, end:9, barClass:'bar-p1' },
+    { group:'p1', label:'Legacy Adapter Layer',       note:'API v1 → Legacy SPs bridge; DTO/Mapping validation against legacy SQL constraints', start:5, end:12, barClass:'bar-p1' },
+    { group:'p1', label:'⚑  First API Live',          note:'Milestone: Assessor read endpoints operational', start:8, end:8, barClass:'bar-p1', type:'milestone' },
+    { group:'p1', label:'⚑  Sprint Demo #1',          note:'Milestone: Taxroll UI demo to stakeholders', start:10, end:10, barClass:'bar-p1', type:'milestone' },
+
+    // ── Phase 2 ──────────────────────────────────────────────────────────────
+    { group:'p2', label:'TOT Module',                 note:'Transient Occupancy Tax — 38 tables, 294 SPs, 72K rows', start:13, end:16, barClass:'bar-p2' },
+    { group:'p2', label:'COB Module',                 note:'Collection of Business Tax — 26 tables, 282 SPs', start:13, end:16, barClass:'bar-p2' },
+    { group:'p2', label:'Search Service',             note:'Redis Cache + SQL full-text; cross-module parcel & owner search', start:13, end:17, barClass:'bar-p2' },
+    { group:'p2', label:'Address Service',            note:'Redis + GIS integration for parcel geo-lookup', start:14, end:17, barClass:'bar-p2' },
+    { group:'p2', label:'Reporting Service',          note:'Replace Crystal Reports → Power BI / SSRS; Blob Storage for exports', start:14, end:18, barClass:'bar-p2' },
+    { group:'p2', label:'Multi-Tenant RLS',           note:'Row-level security isolation per county on Core DB', start:15, end:18, barClass:'bar-p2' },
+    { group:'p2', label:'⚑  UI Design Freeze',        note:'Milestone: All React templates and design system locked', start:18, end:18, barClass:'bar-p2', type:'milestone' },
+
+    // ── Phase 3 ──────────────────────────────────────────────────────────────
+    { group:'p3', label:'CBT/WIS Cleanup',            note:'~51 non-functional screens retired; CBT merged into Tax service', start:19, end:21, barClass:'bar-p3' },
+    { group:'p3', label:'Full Data Migration',        note:'On-prem SQL → Azure SQL; Strangler Fig Core DB shrink, domain DB population', start:19, end:22, barClass:'bar-p3' },
+    { group:'p3', label:'Parallel Run & Validation',  note:'WinForms + React co-exist; Data Shield DTO validation active', start:19, end:23, barClass:'bar-p3' },
+    { group:'p3', label:'User Acceptance Testing',    note:'County end-users validate all 525 screens across 4 modules', start:21, end:23, barClass:'bar-p3' },
+    { group:'p3', label:'DR / RTO/RPO Validation',    note:'Disaster recovery runbook tested; geo-redundant backup verified', start:22, end:24, barClass:'bar-p3' },
+    { group:'p3', label:'⚑  UAT Complete',            note:'Milestone: County sign-off on all modules', start:22, end:22, barClass:'bar-p3', type:'milestone' },
+    { group:'p3', label:'⚑  Legacy UI Shutdown',      note:'Milestone: WinForms decommissioned — cloud-native go-live', start:24, end:24, barClass:'bar-p3', type:'milestone' },
+  ];
+
+  // Milestone months for shading
+  const milestoneCols = new Set([4, 8, 10, 18, 22, 24]);
+
+  // Quarter alternation (months 1-6, 7-12, 13-18, 19-24)
+  function isAltQuarter(m) { return m >= 7 && m <= 12 || m >= 19 && m <= 24; }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function render() {
+    const gantt = document.getElementById('gantt');
+    gantt.innerHTML = '';
+    gantt.style.setProperty('--month-count', TOTAL_MONTHS);
+
+    const monthCells = (extraClass = '') =>
+      Array.from({ length: TOTAL_MONTHS }, (_, i) => {
+        const m = i + 1;
+        const cls = [
+          'month-cell',
+          isAltQuarter(m) ? 'q-alt' : '',
+          milestoneCols.has(m) ? 'milestone-col' : '',
+          extraClass
+        ].filter(Boolean).join(' ');
+        return `<div class="${cls}"></div>`;
+      }).join('');
+
+    // ── Phase band row ────────────────────────────────────────────────────────
+    const bandRow = document.createElement('div');
+    bandRow.className = 'phase-band-row';
+    let bandHTML = `<div class="phase-band-label"></div>`;
+    phases.forEach(ph => {
+      const span = ph.end - ph.start + 1;
+      bandHTML += `<div class="phase-band-cell" style="width:${span * CELL_W}px; min-width:${span * CELL_W}px; flex-shrink:0; background:${ph.color};">${ph.label}</div>`;
+    });
+    bandRow.innerHTML = bandHTML;
+    gantt.appendChild(bandRow);
+
+    // ── Month header row ──────────────────────────────────────────────────────
+    const headerRow = document.createElement('div');
+    headerRow.className = 'header-row';
+    headerRow.innerHTML =
+      `<div class="left-head">Task / Deliverable</div>` +
+      Array.from({ length: TOTAL_MONTHS }, (_, i) =>
+        `<div class="month-head">M${i + 1}</div>`
+      ).join('');
+    gantt.appendChild(headerRow);
+
+    // ── Task rows grouped by phase ────────────────────────────────────────────
+    phases.forEach(ph => {
+      const phaseTasks = tasks.filter(t => t.group === ph.id);
+
+      // Group header row
+      const groupRow = document.createElement('div');
+      groupRow.className = 'group-row';
+      groupRow.innerHTML =
+        `<div class="group-label">
+           <span class="group-tag" style="background:${ph.color}">${ph.label.split('—')[0].trim()}</span>
+           <span style="font-size:11px; color:#6b7280">Months ${ph.start}–${ph.end}</span>
+         </div>
+         <div class="group-row-cells">${monthCells()}</div>`;
+      gantt.appendChild(groupRow);
+
+      // Task rows
+      phaseTasks.forEach(task => {
+        const row = document.createElement('div');
+        row.className = 'task-row';
+
+        const s = task.start;
+        const e = task.end;
+        const isMilestone = task.type === 'milestone';
+
+        const barLeft  = LABEL_W + ((s - 1) * CELL_W) + (isMilestone ? Math.floor(CELL_W / 2) - 7 : 4);
+        const barWidth = isMilestone ? 14 : Math.max(((e - s + 1) * CELL_W) - 8, 20);
+
+        const barEl = isMilestone
+          ? `<div class="milestone-diamond" style="left:${barLeft}px;" title="${task.label}: ${task.note}"></div>`
+          : `<div class="task-bar ${task.barClass}" style="left:${barLeft}px; width:${barWidth}px;" title="${task.label}: ${task.note}">${task.label}</div>`;
+
+        row.innerHTML =
+          `<div class="task-info">
+             <div class="task-title">${task.label}</div>
+             <div class="task-meta">${task.note}</div>
+           </div>` +
+          monthCells() +
+          barEl;
+
+        gantt.appendChild(row);
+      });
+    });
+  }
+
+  // ── Fullscreen ──────────────────────────────────────────────────────────────
+  const board    = document.getElementById('ganttBoard');
+  const fsBtn    = document.getElementById('fsBtn');
+  const fsBtnLbl = document.getElementById('fsBtnLabel');
+
+  fsBtn.addEventListener('click', () => {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (!isFs) (board.requestFullscreen || board.webkitRequestFullscreen).call(board);
+    else       (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  });
+
+  ['fullscreenchange','webkitfullscreenchange'].forEach(ev =>
+    document.addEventListener(ev, () => {
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      fsBtnLbl.textContent = isFs ? 'Exit Fullscreen' : 'Fullscreen';
+    })
+  );
+
+  // ── Boot ────────────────────────────────────────────────────────────────────
+  render();
+</script>
+</body>
+</html>
